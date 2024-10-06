@@ -1,0 +1,28 @@
+{% extends "layout/basic.html" %}
+
+{% block content %}
+    <p>Рубрика: {{ bb.rubric.name }}</p>
+    <h2>{{ bb.title }}</h2>
+    
+    {% if bb.img %}
+        <p><img src="{{ bb.img.url }}" alt="bb.title"></p>
+    {% endif %}
+    
+    <p>{{ bb.content.rendered }}</p>
+{#    <p>Цена: {{ bb.price|default:'У товара нет цены'|floatformat:1 }} тг.</p>#}
+    <p>Цена: {{ bb.price|default:'У товара нет цены' }} тг.</p>
+    <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+    <p>
+        <a href="{% url 'bboard:update' bb.pk %}">Изменить</a> | 
+        <a href="{% url 'bboard:delete' bb.pk %}">Удалить</a>
+    </p>
+    
+    {% comment %}
+    <pre>
+{{ 'Python'|ljust:20 }}
+{{ 'Python'|center:20 }}
+{{ 'Python'|rjust:20 }}
+    </pre>
+    {% endcomment %}
+    
+{% endblock %}
