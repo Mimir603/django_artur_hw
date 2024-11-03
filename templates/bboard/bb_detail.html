@@ -1,8 +1,15 @@
 {% extends "layout/basic.html" %}
 
+{% load thumbnail %}
+
 {% block content %}
     <p>Рубрика: {{ bb.rubric.name }}</p>
     <h2>{{ bb.title }}</h2>
+
+    {% if bb.img %}
+        <p><img src="{{ bb.img|thumbnail_url:'default' }}" alt="bb.title"></p>
+        <p><img src="{% thumbnail bb.img 'default' bw=True %}" alt="bb.title"></p>
+    {% endif %}
     
     {% if bb.img %}
         <p><img src="{{ bb.img.url }}" alt="bb.title"></p>

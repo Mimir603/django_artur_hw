@@ -1,0 +1,30 @@
+header h1 {
+    font-size: 40pt;
+    text-transform: uppercase;
+    text-align: center;
+    background: url("bg.jpg") left / auto 100% no-repeat;
+}
+nav {
+    font-size: 16pt;
+    width: 200px;
+    float: left;
+}
+nav a {
+    display: block;
+    margin: 10px 0;
+}
+section {
+    margin-left: 220px;
+}
+
+.b1 {
+    background-color: #eff;
+}
+
+.b2 {
+    background-color: #fef;
+}
+
+.b3 {
+    background-color: #ffe;
+}

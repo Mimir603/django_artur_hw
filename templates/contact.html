@@ -1,0 +1,13 @@
+<form method="POST">
+    {% csrf_token %}
+    <label for="email">Ваш email:</label>
+    <input type="email" name="email" required><br>
+
+    <label for="subject">Тема:</label>
+    <input type="text" name="subject" required><br>
+
+    <label for="message">Сообщение:</label>
+    <textarea name="message" required></textarea><br>
+
+    <input type="submit" value="Отправить">
+</form>

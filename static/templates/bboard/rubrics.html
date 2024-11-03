@@ -1,0 +1,60 @@
+{% extends "layout/basic.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Рубрики{% endblock %}
+
+{% block content %}
+<h2>Рубрики</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        {% bootstrap_alert '<p>Рубрика добавлена</p>' alert_type='success' dismissible=True %}
+        
+        {% bootstrap_formset formset layout='horizontal' %}
+        {% bootstrap_button 'Очистить' button_type='reset' button_class='btn-secondary' %}
+        {% bootstrap_button 'Сохранить' %}
+        
+    {% comment 'Теперь используем django_bootstrap5' %}
+        {{ formset.management_form }}
+        
+        {% if formset.non_form_errors %}
+            <ul>
+            {% for error in formset.non_form_errors %}
+                <li><em>{{ error|escape }}</em></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    
+        {% for form in formset %}
+    
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+        
+            {% if form.non_field_errors %}
+                <ul>
+                {% for error in form.non_field_errors %}
+                    <li><em>{{ error|escape }}</em></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            
+            {% for field in form.visible_fields %}
+                {% if field.errors %}
+                    <ul>
+                    {% for error in field.errors %}
+                        <li><em>{{ error|escape }}</em></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                <p>{{ field.label_tag }}<br>{{ field }}<br>
+                   {{ field.help_text }}</p>
+            {% endfor %}
+        
+        {% endfor %}
+    
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    {% endcomment %}
+    </form>
+{% endblock %}

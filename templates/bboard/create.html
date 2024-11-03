@@ -7,6 +7,16 @@
 {% block content %}
 <h2>Добавление объявления</h2>
 
+    {% if messages %}
+{#        <ul class="messages messagelist">#}
+        {% for message in messages %}
+{#            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>#}
+{#                  {{ message }}#}
+{#            </li>#}
+    <div{% if message.tags %} class="{{ message.tags }}" {% endif %}
+            {{ message }}
+        </ul>
+
     {% if form.is_multipart %}
         <form method="post" enctype="multipart/form-data">
     {% else %}

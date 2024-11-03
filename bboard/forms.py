@@ -25,9 +25,9 @@ class ImgForm(forms.ModelForm):
 
 
 class FileForm(forms.ModelForm):
-    file_format = forms.FileField(label='Файлы (формата xlsx, pdf (проба файлов docx)',
+    file = forms.FileField(label='Файлы',
                            validators=[validators.FileExtensionValidator(
-                               allowed_extensions=('pdf', 'xlsx', 'docx'))],
+                               allowed_extensions=('docx', 'pdf', 'xlsx'))],
                            error_messages={
                                'invalid_extension': 'Этот формат не поддерживается'})
     desc = forms.CharField(label='Описание', widget=forms.widgets.Textarea())
@@ -80,12 +80,12 @@ class BbForm(ModelForm):
                                allowed_extensions=('gif', 'jpg', 'png'))],
                            error_messages={
                                'invalid_extension': 'Этот формат не поддерживается'})
-
-    file_format = forms.FileField(label='Файлы',
-                           validators=[validators.FileExtensionValidator(                   #тут появляется поле для загрузки файлов формата validators
-                               allowed_extensions=('xlsx', 'pdf'))],
-                           error_messages={
-                               'invalid_extension': 'Этот формат не поддерживается'})
+    #
+    # file = forms.FileField(label='Документы',
+    #                        validators=[validators.FileExtensionValidator(
+    #                            allowed_extensions=('xlsx', 'docx', 'pdf'))],
+    #                        error_messages={
+    #                            'invalid_extension': 'Этот формат не поддерживается'})
 
     captcha = CaptchaField(label='Введите текст с картинки',
                            error_messages={'invalid': 'Неправильный текст'},
@@ -117,7 +117,7 @@ class BbForm(ModelForm):
 
     class Meta:
         model = Bb
-        fields = ('title', 'content', 'price', 'rubric', 'img', 'file')
+        fields = ('title', 'content', 'price', 'rubric', 'img')
         labels = {'title': 'Название товара'},
 
 

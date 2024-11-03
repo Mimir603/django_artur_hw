@@ -1,3 +1,6 @@
+from datetime import datetime
+from os.path import splitext
+
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -68,3 +71,17 @@ class Note(models.Model):
 # class PGSProject3(models.Model):
 #     name = CICharField(max_length=40, verbose_name='Название')
 #     data = models.JSONField()
+
+
+def get_timestamp_path(instance, filename):
+    return '%s%s' % (datetime.now().timestamp(), splitext(filename)[1])
+
+
+class Img(models.Model):
+    img = models.ImageField(verbose_name="Изображение", upload_to='images/%Y/%m/%d/')
+    desc = models.TextField(verbose_name='Описание')
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображение'
+

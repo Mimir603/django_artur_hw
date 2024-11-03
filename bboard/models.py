@@ -44,12 +44,13 @@ class Img(models.Model):
 
 
 class File(models.Model):
-    file = models.FileField(verbose_name="Файлы", upload_to='files/%Y/%m/%d')  #Модель File хранит загружаемые файлы, организованные по датам (год/месяц/день), и описание для каждого файла.
+    file = models.FileField(verbose_name="Файлы", upload_to='files/%Y/%m/%d')
     desc = models.TextField(verbose_name='Описание')
 
     class Meta:
         verbose_name = 'Файлы'
         verbose_name_plural = 'Файлы'
+
 
 class RubricQuerySet(models.QuerySet):
     def order_by_bb_count(self):
@@ -79,7 +80,8 @@ class RubricManager(models.Manager):
 class Rubric(models.Model):
     name = models.CharField(max_length=20, db_index=True, unique=True,
                             verbose_name='Название')
-    order = models.SmallIntegerField(default=0, db_index=True)
+    order = models.SmallIntegerField(default=0, db_index=True,
+                                     verbose_name='Порядок')
 
     # objects = RubricManager()
     # objects = models.Manager()
@@ -161,9 +163,10 @@ class Bb(models.Model):
     #                           null=True, blank=True, verbose_name='Цена')
     price = models.DecimalField(max_digits=15, decimal_places=2,
                                 null=True, blank=True, verbose_name='Цена',
-                                validators=[validate_even,
+                                # validators=[validate_even,
                                             # MinMaxValueValidator(100, 1_000_000)
-                                            ])
+                                            # ]
+                                )
     published = models.DateTimeField(auto_now_add=True, db_index=True,
                                      verbose_name='Опубликовано')
     # is_active = models.BooleanField(  # default=True
@@ -172,19 +175,18 @@ class Bb(models.Model):
 
     img = models.ImageField(verbose_name='Изображение', blank=True, upload_to=get_timestamp_path)
 
-    file_format = models.FileField(verbose_name='Файл', blank=True, upload_to=get_timestamp_path) #здесь файлы будут сохранятся в отдельные папки
+    # file = models.FileField(verbose_name='Документы', blank=True, upload_to=get_timestamp_path)
 
     objects = models.Manager()
     by_price = BbManager()
 
+    is_hidden = models.BooleanField(default=False, verbose_name='Скрыть')
 
-
-
-def title_and_price(self):
-    if self.price:
-        return f'{self.title} ({self.price:.2f})'
-    else:
-        return self.title
+    def title_and_price(self):
+        if self.price:
+            return f'{self.title} ({self.price:.2f})'
+        else:
+            return self.title
 
     title_and_price.short_description = 'Название и цена'
 

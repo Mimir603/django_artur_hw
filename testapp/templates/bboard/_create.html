@@ -1,0 +1,27 @@
+{% extends "layout/basic.html" %}
+
+
+
+{% block title %}Добавление объявления{% endblock %}
+
+{% block content %}
+<h2>Добавление объявления</h2>
+
+    {% if form.is_multipart %}
+        <form method="post" enctype="multipart/form-data">
+    {% else %}
+        <form method="post">
+    {% endif %}
+{#    <form action="{% url 'bboard:add_save' %}" method="post"> #}
+        {% csrf_token %}
+{#        {{ form.as_div }}#}
+{#        {{ form.as_p }}#}
+{#        <ul>#}
+{#            {{ form.as_ul }}#}
+{#        </ul>#}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+{% endblock %}

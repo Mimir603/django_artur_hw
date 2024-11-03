@@ -1,0 +1,9 @@
+{% extends "layout/basic.html" %}
+
+{% block content %}
+    {% for img in imgs %}
+        <div class="image">
+            <p><img src="{% url 'testapp:get' filename=img %}" style="width:200px;"></p>
+        </div>
+    {% endfor %}
+{% endblock %}

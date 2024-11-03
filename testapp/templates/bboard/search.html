@@ -1,0 +1,30 @@
+{% extends "layout/basic.html" %}
+
+
+
+{% block title %}Поиск объявлений{% endblock %}
+
+{% block content %}
+<h2>Поиск объявлений</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Найти</button>
+    </form>
+    
+    {% for bb in bbs %}
+    <div>
+        {% url 'bboard:detail' bb.pk as detail_url %}
+        <h2>
+            <a href="{{ detail_url }}">{{ bb.title }}</a> ({{ bb.price }} тг.)
+        </h2>
+        <p>{{ bb.content }}</p>
+        <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+        <p><a href="{{ detail_url }}">Подробнее</a></p>
+    </div>
+    {% empty %}
+        <h2>Объявлений нет</h2>
+    {% endfor %}
+    
+{% endblock %}

@@ -1,0 +1,17 @@
+<nav>
+    <a href="{% url 'bboard:index' %}">Главная</a>
+
+    {% if user.is_anonymous %}
+        <a href="{% url 'login' %}">Войти</a>
+    {% else %}
+        <a href="{% url 'logout' %}">Выйти</a>
+    {% endif %}
+
+    <a href="{% url 'bboard:add' %}">Добавить</a>
+    <a href="{% url 'bboard:rubrics' %}">Рубрики</a>
+    {% for rubric in rubrics %}
+        {# <a href="/{{ rubric.pk }}/">{{ rubric.name }}</a> #}
+{#        <a href="{% url 'bboard:by_rubric' rubric.pk %}">{{ rubric.name }}</a> #}
+        <a href="{{ rubric.get_absolute_url }}">{{ rubric.name }} ({{ rubric.cnt }})</a>
+    {% endfor %}
+</nav>

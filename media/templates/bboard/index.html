@@ -1,0 +1,96 @@
+{% extends "layout/basic.html" %}
+{% load bbcode_tags %}
+{% load django_bootstrap5 %}
+{% load bbtags %}
+
+{% block content %}
+    
+    {% lst ', ' '1' '2' '3' '4' '5' '6' %}
+    {% ulist '1' '2' '3' '4' '5' '6' %}
+    
+{#    {{ block.super }}#}
+
+    {% for bb in bbs %}
+    <div>
+        {% if forloop.first %}
+            <h2 style="font-size: 36px;">
+                <a href="{% url 'bboard:detail' pk=bb.pk %}">
+                    {{ bb.title_and_price|upper }}</a>
+            </h2>
+        {% else %}
+            <h2>
+                <a href="{% url 'bboard:detail' pk=bb.pk %}">{{ bb.title_and_price }}</a>
+            </h2>
+        {% endif %}
+{#        <p><strong>Цена:</strong> {{ bb.price|cur:'р.' }}</p>#}
+        <p><strong>Цена:</strong> {{ bb.price|cur }}</p>
+{#            <p>{{ bb.content }}</p>#}
+{#            <p>{{ bb.content|bbcode|safe }}</p>#}
+{#            <p>{% bbcode bb.content %}</p>#}
+{#            <p>{{ bb.content.rendered }}</p>#}
+    
+        {% ifchanged %}
+            <p><a href="{% url 'bboard:by_rubric' bb.rubric.pk %}">
+                {{ bb.rubric.name }}</a></p>
+        {% endifchanged %}
+
+        <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+    </div>
+    {% endfor %}
+    
+{% comment 'Теперь используем django_bootstrap5' %}
+    <div>
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">&lt;</a>
+            &nbsp; | &nbsp;
+        {% endif %}
+    
+        Страница {{ page.number }} из {{ page.paginator.num_pages }}
+        
+        {% if page.has_next %}
+            &nbsp; | &nbsp;
+            <a href="?page={{ page.next_page_number }}">&gt;</a>
+        {% endif %}
+    </div>
+{% endcomment %}
+    
+{% comment 'Теперь используем django_bootstrap5' %}
+    {% if page.has_other_pages %}
+        <nav aria-label="pagination">
+            <ul class="pagination">
+                
+                {% if page.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page.previous_page_number }}">Назад</a>
+                    </li>
+                {% endif %}
+            
+                {% for p in page.paginator.page_range %}
+                    {% if not p == page.number %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link disabled bg-primary text-light"
+                               href="?page={{ p }}">{{ p }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page.next_page_number }}">Вперёд</a>
+                    </li>
+                {% endif %}
+                
+            </ul>
+        </nav>
+    {% endif %}
+{% endcomment %}
+    
+    {% bootstrap_pagination page size='sm' pages_to_show=5 %}
+    
+{% endblock %}

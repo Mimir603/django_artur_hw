@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
@@ -93,6 +94,7 @@ class BbCreateView(LoginRequiredMixin, CreateView):
     form_class = BbForm
     # success_url = reverse_lazy('bboard:index')
     success_url = '/{rubric_id}'
+    success_message = 'Объявление о продаже товара "%(title)s" создано'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -125,6 +127,10 @@ def edit(request, pk):
         if bbf.is_valid():
             if bbf.has_changed():
                 bbf.save()
+                messages.add_message(request, messages.SUCCESS, 'Объявление исправлено!',
+                                     extra_tags='alert alert-success')
+                messages.success(request, 'Объявление исправлено - 2!',
+                                 extra_tags='alert alert-success')
             return HttpResponseRedirect(
                 reverse('bboard:by_rubric',
                         kwargs={'rubric_id': bbf.cleaned_data['rubric'].pk}))

@@ -1,0 +1,22 @@
+{% extends "layout/basic.html" %}
+
+
+{% block title %}{{ current_rubric }}{% endblock %}
+
+{% block content %}
+    {% for bb in bbs %}
+    <div>
+        {% url 'bboard:detail' bb.pk as detail_url %}
+        <h2>
+{#            <a href="{% url 'bboard:detail' pk=bb.pk %}">{{ bb.title }}</a> #}
+            {{ forloop.counter }}.
+                <a href="{{ detail_url }}">{{ bb.title }}</a> ({{ bb.price }} тг.)
+        </h2>
+        <p>{{ bb.content.rendered }}</p>
+        <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+        <p><a href="{{ detail_url }}">Подробнее</a></p>
+    </div>
+    {% empty %}
+        <h2>Объявлений нет</h2>
+    {% endfor %}
+{% endblock %}
