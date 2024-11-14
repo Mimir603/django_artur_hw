@@ -159,7 +159,7 @@ def send_test_email(request):
         'Тема: отправка электронных писем',
         'Это тестовое сообщение для проверки их отправки',
         'TestEmail@gmail.com',  # Отправитель
-        ['TestEmail_clone@example.com'],  # Получатель
+        ['TestEmail2@example.com'],  # Получатель
         fail_silently=False,
     )
     return HttpResponse("Письмо отправлено успешно.")
