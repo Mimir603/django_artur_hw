@@ -1,6 +1,9 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Count
@@ -26,10 +29,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from bboard import models
 from bboard.forms import BbForm, RubricFormSet, SearchForm
 from bboard.models import Bb, Rubric
 
 from bboard.serializers import RubricSerializer
+from testapp.bboard.models import BbManager
 
 
 def index(request):
@@ -393,4 +398,55 @@ class APIRubricReadSet(ReadOnlyModelViewSet):
 #     serializer_class = BbSerializer
 
 
+def bb_detail(request, pk):
+    bb = get_object_or_404(Bb, pk=pk)
+    id_and_title = bb.id_and_title()
+    sum_price = bb.sum_of_values(100)
+    return render(request, 'bb_detail.html', {
+        'bb': bb,
+        'id_and_title': id_and_title,
+        'sum_price': sum_price,
+    })
 
+
+def positive_or_zero(value):
+    if value < 0:
+        raise ValidationError(f"Значение {value} должно быть неотрицательным.")
+
+
+def bb_list(request):
+    bbs = Bb.objects.all()
+    return render(request, 'bb_list.html', {'bbs': bbs})
+
+
+def bb_edit(request, pk):
+    bb = get_object_or_404(Bb, pk=pk)
+    if request.method == "POST":
+        bb.title = request.POST.get('title', bb.title)
+        bb.description = request.POST.get('description', bb.description)
+        bb.price = request.POST.get('price', bb.price)
+        bb.save()
+        return bb
+
+
+logger = logging.getLogger('django')
+
+
+def generate_logs(request):
+    logger.debug('This is a DEBUG message.')
+
+    logger.info('This is an INFO message.')
+
+    logger.warning('This is a WARNING message.')
+
+    try:
+        1 / 0
+    except ZeroDivisionError as e:
+        logger.error(f'ZeroDivisionError occurred: {e}')
+    try:
+        raise PermissionDenied('You do not have access to this resource.')
+    except PermissionDenied as e:
+        logger.error(f'PermissionDenied exception: {e}')
+        raise
+
+    return HttpResponse("Logs generated. Check the log files.")

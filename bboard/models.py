@@ -7,6 +7,7 @@ from django.db import models
 from django.http import HttpResponse
 from precise_bbcode.fields import BBCodeTextField
 
+from testapp.bboard.models import BbManager
 from testapp.models import get_timestamp_path
 
 
@@ -101,15 +102,24 @@ class Rubric(models.Model):
         # ordering = ['order', 'name']
 
 
+# class Bb_method(models.Model):
+#     title = models.CharField(max_length=50)
+#     description = models.TextField(max_length=100)
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#
+#     objects = BbManager()
+#
+#     def id_and_title(self):
+#         return f"Id: {self.id}, Title: {self.title}"
+#
+#     def sum_of_values(self, other_price):
+#         return self.price + other_price
+
+
 class RevRubric(Rubric):
     class Meta:
         proxy = True
         ordering = ['-order', '-name']
-
-
-class BbManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().order_by('price')
 
 
 class Bb(models.Model):
@@ -160,6 +170,7 @@ class Bb(models.Model):
                                             # MinMaxValueValidator(100, 1_000_000)
                                             # ]
                                 )
+    description = models.TextField()
     published = models.DateTimeField(auto_now_add=True, db_index=True,
                                      verbose_name='Опубликовано')
     # is_active = models.BooleanField(  # default=True
@@ -182,6 +193,14 @@ class Bb(models.Model):
             return self.title
 
     title_and_price.short_description = 'Название и цена'
+
+    def id_and_title(self):
+        if self.title:
+            return f'{self.id} {self.title}'
+        else:
+            return f'{self.id}'
+
+    id_and_title.short_description = 'Айдишка и название'
 
     def __str__(self):
         return f'{self.title} ({self.price} тг.)'

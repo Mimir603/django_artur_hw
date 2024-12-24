@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-$_@0d@@#!x!c=udn6cj$@%+3)q!ay!#gl@_c=czm!v*%7!3i0b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -295,15 +295,14 @@ REST_FRAMEWORK = {
 #         'require_debug_false': {
 #             '()': 'django.utils.log.RequireDebugFalse',
 #         },
-#         'requre_debug_tru'
-#         'e': {
+#         'require_debug_true': {
 #             '()': 'django.utils.log.RequireDebugTrue',
 #         },
 #     },
 #     'formatters': {
 #         'simple': {
 #             'format': '[%(asctime)s] %(levelname)s: %(message)s',
-#             'datefmt': '%Y.%m/%d %H:%M:%S',
+#             'datefmt': '%Y.%m.%d %H:%M:%S',
 #         },
 #     },
 #     'handlers': {
@@ -312,65 +311,64 @@ REST_FRAMEWORK = {
 #             'formatter': 'simple',
 #             'filters': ['require_debug_true'],
 #         },
+#         'console_prod': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple',
+#             'level': 'ERROR',
+#             'filters': ['require_debug_false'],
+#         },
+#         'file': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': BASE_DIR / 'log/django-site.log',
+#             'maxBytes': 1_048_576,
+#             'backupCount': 10,
+#             'formatter': 'simple',
+#         },
 #     },
-#     'console_prod': {
-#         'class': "logging.StreamHandler",
-#         'level': 'ERROR',
-#         'filters': ['require_debug_false'],
-#     },
-#
-#     'file': {
-#         'class': 'logging.handlers.RotatingFileHandler',
-#         'filename': BASE_DIR / 'log/django-site.log',
-#         'maxBytes': 1_048_576,
-#
-#         'formatter': 'simple',
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console_dev', 'console_prod'],
+#         },
+#         'django.server': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
 #     },
 # }
 
+
 LOGGING = {
     'version': 1,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
+    'disable_existing_loggers': False,
     'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
         'simple': {
-            'format': '[%(asctime)s] %(levelname)s: %(message)s',
-            'datefmt': '%Y.%m.%d %H:%M:%S',
+            'format': '{levelname} {message}',
+            'style': '{',
         },
     },
     'handlers': {
-        'console_dev': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'filters': ['require_debug_true'],
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
         },
-        'console_prod': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+        'file_error': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-        },
-        'file': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'log/django-site.log',
-            'maxBytes': 1_048_576,
-            'backupCount': 10,
-            'formatter': 'simple',
+            'class': 'logging.FileHandler',
+            'filename': 'errors.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console_dev', 'console_prod'],
-        },
-        'django.server': {
-            'handlers': ['file'],
-            'level': 'INFO',
+            'handlers': ['file_debug', 'file_error'],
+            'level': 'DEBUG',
             'propagate': True,
         },
     },
