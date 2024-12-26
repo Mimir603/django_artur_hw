@@ -1,20 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Банк анекдотов</title>
-</head>
-<body>
-    <h1>Банк анекдотов</h1>
+{% extends 'jokes/base.html' %}
+
+{% block content %}
+<h1 class="text-center">Добро пожаловать в Joke Bank!</h1>
+<div class="row">
     {% for category, jokes in jokes_by_category.items %}
-        <h2>{{ category }}</h2>
-        <ul>
+    <div class="col_#1">
+        <h3>{{ category|title }}</h3>
+        <ul class="list_group">
             {% for joke in jokes %}
-                <li>{{ joke.text }}</li>
+            <li class="list-group-item">{{ joke.text }}</li>
             {% empty %}
-                <li>Нет анекдотов в этой категории.</li>
+            <li class="list-group-item text-muted">Анекдотов этой категории ещё не придумали :b.</li>
             {% endfor %}
         </ul>
+    </div>
     {% endfor %}
-</body>
-</html>
+</div>
+{% endblock %}
+
