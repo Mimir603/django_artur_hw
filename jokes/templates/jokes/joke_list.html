@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Банк анекдотов</title>
+</head>
+<body>
+    <h1>Банк анекдотов</h1>
+    {% for category, jokes in jokes_by_category.items %}
+        <h2>{{ category }}</h2>
+        <ul>
+            {% for joke in jokes %}
+                <li>{{ joke.text }}</li>
+            {% empty %}
+                <li>Нет анекдотов в этой категории.</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</body>
+</html>
